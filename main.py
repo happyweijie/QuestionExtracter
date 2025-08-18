@@ -1,24 +1,36 @@
 from processors import (
-    PDFToImageConverter, 
-    GoogleVisionOCR, 
-    QuestionSegmenter, 
-    ImageCropper, 
-    LocalStorageService, 
+    PDFToImageConverter,
+    GoogleVisionOCR,
+    QuestionSegmenter,
+    ImageCropper,
+    LocalStorageService,
     QuestionExtractionPipeline
 )
 
-if __name__ == "__main__":
+def main(pdf_path: str, output_dir: str):
+    # Initialize components
     pdf_converter = PDFToImageConverter(dpi=300)
-    print("PDF to Image Converter initialized.")
+    print("[INFO] PDF to Image Converter initialized.")
+    
     ocr_service = GoogleVisionOCR()
-    print("Google Vision OCR initialized.")
+    print("[INFO] Google Vision OCR initialized.")
+    
     segmenter = QuestionSegmenter()
-    print("Question Segmenter initialized.")
+    print("[INFO] Question Segmenter initialized.")
+    
     cropper = ImageCropper()
-    print("Image Cropper initialized.") 
-    storage = LocalStorageService(base_path="extracted_questions")
+    print("[INFO] Image Cropper initialized.")
+    
+    storage = LocalStorageService(base_path=output_dir)
+    print(f"[INFO] Local Storage Service initialized at '{output_dir}'.")
 
-    pipeline = QuestionExtractionPipeline(pdf_converter, ocr_service, segmenter, cropper, storage)
-    pipeline.run("exam_paper.pdf")
+    # Create and run pipeline
+    pipeline = QuestionExtractionPipeline(
+        pdf_converter, ocr_service, segmenter, cropper, storage
+    )
+    pipeline.run(pdf_path)
 
-    print("Question extraction pipeline completed.")
+    print("[INFO] Question extraction pipeline completed.")
+
+if __name__ == "__main__":
+    main(pdf_path="tut01.pdf", output_dir="extracted_questions")

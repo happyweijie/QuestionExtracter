@@ -1,0 +1,6 @@
+fitz
+pytesseract
+Pillow
+pandas
+re
+os
